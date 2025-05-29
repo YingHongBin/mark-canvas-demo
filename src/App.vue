@@ -16,7 +16,7 @@ function setDrawType(type: any) {
 }
 
 var showLabel = ref<boolean>(false)
-var labelInput = ref<string>('pigs')
+var labelInput = ref<string>('标签名')
 var colorInput = ref<string>('#ff0000')
 
 var labelCallback: any = null
@@ -95,11 +95,21 @@ onMounted(() => {
 
 function toJSON() {
   let json = mark.value!.toJSON()
-  console.log(json)
+  // 弹窗让用户输入文件名，默认值为 mark-canvas-data.json
+  const filename = prompt('请输入导出文件名', 'mark-canvas-data.json') || 'mark-canvas-data.json'
+  const blob = new Blob([JSON.stringify(json, null, 2)], { type: "application/json" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 
-var jsonValue = ref<string>('[{"index":1,"type":"polygon","label":"测试","color":"#0000ff","pointList":[{"x":589.7610921501706,"y":190.93517524797355},{"x":961.0921501706484,"y":187.4402813699872},{"x":963.7133372440272,"y":511.59047201631824},{"x":574.0341696885665,"y":496.73718969976534}]},{"index":2,"type":"polygon","label":"452","color":"#ff3838","pointList":[{"x":507.5775104955846,"y":367.9062590479178},{"x":733.6945664237803,"y":368.69680578342906},{"x":719.4633981566375,"y":620.1136795468802},{"x":400.8438992906432,"y":620.1136795468802}]},{"index":3,"type":"polygon","label":"2000","color":"#bafc03","pointList":[{"x":864.9373280895622,"y":286.472435518506},{"x":1149.5602711962554,"y":248.52272384548573},{"x":1109.238647879168,"y":663.5977310838199}]},{"index":4,"type":"polygon","label":"25252","color":"#ff14cc","pointList":[{"x":619.8454012449935,"y":123.60487893886025},{"x":745.553853206582,"y":333.11894543502393},{"x":1035.7110456980165,"y":137.83604720600303},{"x":702.0698016696424,"y":24.77750416204223}]},{"index":5,"type":"rect","label":"123123","color":"#ff0000","pointList":[{"x":283.96719303559905,"y":107.75259617537436},{"x":438.0344795796073,"y":243.91007553108827}]}]')
+var jsonValue = ref<string>('')
 
 function importJSON() {
   try {
